@@ -883,7 +883,7 @@ Expériences :
 ${experiences.join('\n\n')}`;
 
   try {
-    const response = await fetch('/api/chat', {
+    const response = await fetch('https://reveler-mocha.vercel.app/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -933,7 +933,7 @@ Propose :
 Sois concret, valorisant, et ose des propositions auxquelles la personne n'aurait pas forcément pensé. Tutoie la personne.`;
 
   try {
-    const response = await fetch('/api/chat', {
+    const response = await fetch('https://reveler-mocha.vercel.app/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
