@@ -518,6 +518,14 @@
     .tab-btn { padding: 0.8rem 1rem; font-size: 0.75rem; }
     .download-bar { flex-direction: column; align-items: flex-start; }
   }
+
+  @media print {
+    .header, .tabs-bar, .btn-add, .btn-primary, .btn-gold, .btn-outline, .download-bar, .audio-block, .claude-links, .ai-section button { display: none !important; }
+    .tab-content { display: block !important; }
+    .section, .exp-card, .conscience-block { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+    body { background: white; }
+    .container { padding: 1rem; }
+  }
 </style>
 </head>
 <body>
@@ -594,9 +602,9 @@
   <div class="download-bar">
     <div>
       <p><strong>Tu as fini cet onglet ?</strong></p>
-      <p>Télécharge ton document et dépose-le sur la plateforme pour me le transmettre.</p>
+      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger ton document en PDF : clique sur le bouton ci-dessous, puis dans la fenêtre qui s'ouvre, sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination et clique "Enregistrer".</p>
     </div>
-    <button class="btn-gold" onclick="downloadPDF()">⬇ Télécharger mon document</button>
+    <button class="btn-gold" onclick="printDoc()">🖨️ Télécharger mon document en PDF</button>
   </div>
 
   <div class="tab-nav-bottom">
@@ -702,9 +710,9 @@
   <div class="download-bar">
     <div>
       <p><strong>Tu as fini cet onglet ?</strong></p>
-      <p>Télécharge ton document et dépose-le sur la plateforme pour me le transmettre.</p>
+      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger ton document en PDF : clique sur le bouton ci-dessous, puis dans la fenêtre qui s'ouvre, sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination et clique "Enregistrer".</p>
     </div>
-    <button class="btn-gold" onclick="downloadPDF()">⬇ Télécharger mon document</button>
+    <button class="btn-gold" onclick="printDoc()">🖨️ Télécharger mon document en PDF</button>
   </div>
 
   <div class="tab-nav-bottom">
@@ -757,15 +765,19 @@
   <div class="download-bar">
     <div>
       <p><strong>Tu as terminé ce fichier ? Bravo !</strong></p>
-      <p>Télécharge ton document complet et dépose-le sur la plateforme pour me le transmettre.</p>
+      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger ton document en PDF : clique sur le bouton ci-dessous, puis dans la fenêtre qui s'ouvre, sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination et clique "Enregistrer".</p>
     </div>
-    <button class="btn-gold" onclick="downloadPDF()">⬇ Télécharger mon document</button>
+    <button class="btn-gold" onclick="printDoc()">🖨️ Télécharger mon document en PDF</button>
   </div>
 
 </div>
 </div>
 
 <script>
+
+function printDoc() {
+  window.print();
+}
 // ============ TABS ============
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
