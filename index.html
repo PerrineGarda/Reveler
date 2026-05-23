@@ -542,6 +542,11 @@
 <div id="tab1" class="tab-content active">
 <div class="container">
 
+  
+  <div style="background:#fff3cd;border:1.5px solid #f0b13d;border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.8rem;color:#856404;display:flex;align-items:center;gap:0.6rem;">
+    <span>💾</span>
+    <span>Pense à télécharger régulièrement ton document pour ne pas perdre ton travail.</span>
+  </div>
   <div class="intro-block">
     <h1>Mes compétences</h1>
     <p>Commence par lister tes expériences professionnelles, personnelles et associatives. Pour chacune, décris ce que tu y as fait concrètement en donnant le plus de détails possible, et célèbre tes réussites !</p>
@@ -605,6 +610,11 @@
 <div id="tab2" class="tab-content">
 <div class="container">
 
+  
+  <div style="background:#fff3cd;border:1.5px solid #f0b13d;border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.8rem;color:#856404;display:flex;align-items:center;gap:0.6rem;">
+    <span>💾</span>
+    <span>Pense à télécharger régulièrement ton document pour ne pas perdre ton travail.</span>
+  </div>
   <div class="intro-block">
     <h1>Mes talents naturels</h1>
     <p>Maintenant que tu as identifié tes compétences acquises, cette partie va te permettre de commencer à prendre conscience de tes compétences naturelles : ce qui est tellement facile et évident pour toi que tu ne t'en rends pas compte, alors que ce sont de réels talents.</p>
@@ -709,6 +719,11 @@
 <div id="tab3" class="tab-content">
 <div class="container">
 
+  
+  <div style="background:#fff3cd;border:1.5px solid #f0b13d;border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.8rem;color:#856404;display:flex;align-items:center;gap:0.6rem;">
+    <span>💾</span>
+    <span>Pense à télécharger régulièrement ton document pour ne pas perdre ton travail.</span>
+  </div>
   <div class="intro-block">
     <h1>Mes pistes métiers</h1>
     <p>À partir de tout ce que tu as décrit dans les deux onglets précédents, découvre les métiers et projets qui pourraient te correspondre.</p>
@@ -887,14 +902,14 @@ ${experiences.join('\n\n')}`;
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
     const data = await response.json();
-    const text = data.content?.map(b => b.text || '').join('') || 'Une erreur s\'est produite.';
-    textDiv.innerText = text;
+    const rawText = data.content?.map(b => b.text || '').join('') || 'Une erreur s\'est produite.';
+    textDiv.innerText = rawText;
     saveData();
   } catch(e) {
     textDiv.innerText = 'Une erreur s\'est produite. Vérifie ta connexion et réessaie.';
@@ -904,7 +919,7 @@ ${experiences.join('\n\n')}`;
 
 // ============ METIERS ANALYSIS ============
 async function analyzeMetiers() {
-  const aiText = document.getElementById('ai-text-1')?.innerText || '';
+  const aiText = stripMarkdown(document.getElementById('ai-text-1')?.innerText || '');
   const t2qs = ['t2q1','t2q2','t2q3','t2q4','t2q5','t2q6'].map(id => document.getElementById(id)?.value || '').filter(Boolean).join('\n');
 
   if (!aiText && !t2qs) {
@@ -937,19 +952,33 @@ Sois concret, valorisant, et ose des propositions auxquelles la personne n'aurai
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1500,
         messages: [{ role: 'user', content: prompt }]
       })
     });
     const data = await response.json();
-    const text = data.content?.map(b => b.text || '').join('') || 'Une erreur s\'est produite.';
-    textDiv.innerText = text;
+    const rawText = data.content?.map(b => b.text || '').join('') || 'Une erreur s\'est produite.';
+    textDiv.innerText = rawText;
     saveData();
   } catch(e) {
     textDiv.innerText = 'Une erreur s\'est produite. Vérifie ta connexion et réessaie.';
   }
 }
+
+
+  function stripMarkdown(text) {
+    if (!text) return '';
+    return text
+      .replace(/#{1,6}\s+/g, '')
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/^[-*]\s+/gm, '• ')
+      .replace(/^\d+\.\s+/gm, '')
+      .replace(/`([^`]+)`/g, '$1')
+      .replace(/_{1,2}(.*?)_{1,2}/g, '$1')
+      .trim();
+  }
 
 // ============ PDF DOWNLOAD ============
 async function downloadPDF() {
@@ -989,7 +1018,7 @@ async function downloadPDF() {
     // Footer
     doc.setFontSize(8);
     doc.setTextColor(...mid);
-    doc.text('Révéler — Fichier 1 : Me Connaître', margin, 290);
+    doc.text('Révéler — Révéler mes forces', margin, 290);
     doc.text(`Page ${pageNum}`, pageW - margin, 290, { align: 'right' });
   }
 
@@ -1005,14 +1034,14 @@ async function downloadPDF() {
     doc.setFontSize(13);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(...white);
-    doc.text('Révéler — Fichier 1 : Me Connaître', margin, 14);
+    doc.text('Révéler — Révéler mes forces', margin, 14);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
     doc.text('Date : ' + dateStr, pageW - margin, 14, { align: 'right' });
     // Footer page 1
     doc.setFontSize(8);
     doc.setTextColor(...mid);
-    doc.text('Révéler — Fichier 1 : Me Connaître', margin, 290);
+    doc.text('Révéler — Révéler mes forces', margin, 290);
     doc.text('Page 1', pageW - margin, 290, { align: 'right' });
     y = 32;
   }
@@ -1099,7 +1128,7 @@ async function downloadPDF() {
     y += 2;
   });
 
-  const aiText = document.getElementById('ai-text-1')?.innerText || '';
+  const aiText = stripMarkdown(document.getElementById('ai-text-1')?.innerText || '');
   if (aiText && !aiText.includes('analyse tes compétences')) {
     checkY(10);
     doc.setFillColor(230, 249, 250);
@@ -1111,7 +1140,7 @@ async function downloadPDF() {
     doc.setFontSize(8.5);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(...teal);
-    doc.text('🤖 Analyse de mes compétences (Claude)', margin + 4, y + 6);
+    doc.text('Analyse de mes compétences (Claude)', margin + 4, y + 6);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(...dark);
     doc.text(aiLines, margin + 4, y + 11);
@@ -1143,20 +1172,20 @@ async function downloadPDF() {
   addPage();
   sectionTitle('ONGLET 3 — MES PISTES MÉTIERS', teal);
 
-  const metiersText = document.getElementById('ai-text-metiers')?.innerText || '';
+  const metiersText = stripMarkdown(document.getElementById('ai-text-metiers')?.innerText || '');
   if (metiersText && !metiersText.includes('explore tes pistes')) {
-    checkY(10);
-    const aiLines = doc.splitTextToSize(metiersText, contentW - 8);
-    const aiBoxH = aiLines.length * 5 + 12;
-    checkY(aiBoxH + 4);
-    doc.setFillColor(230, 249, 250);
-    doc.setDrawColor(...teal);
-    doc.roundedRect(margin, y, contentW, aiBoxH, 3, 3, 'FD');
-    doc.setFontSize(8.5); doc.setFont('helvetica', 'bold'); doc.setTextColor(...teal);
-    doc.text('✦ Pistes métiers générées par Claude', margin + 4, y + 6);
-    doc.setFont('helvetica', 'normal'); doc.setTextColor(...dark);
-    doc.text(aiLines, margin + 4, y + 11);
-    y += aiBoxH + 5;
+    doc.setFontSize(9); doc.setFont('helvetica', 'bold'); doc.setTextColor(...teal);
+    doc.text('Pistes metiers generees par Claude', margin, y);
+    y += 6;
+    doc.setFontSize(8.5); doc.setFont('helvetica', 'normal'); doc.setTextColor(...dark);
+    const metiersParas = metiersText.split('\n').filter(l => l.trim());
+    metiersParas.forEach(para => {
+      const lines = doc.splitTextToSize(para, contentW);
+      checkY(lines.length * 5 + 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 5 + 2;
+    });
+    y += 4;
   }
 
   const cm = document.getElementById('conscience-metiers')?.value || '';
