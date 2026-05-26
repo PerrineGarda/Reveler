@@ -140,7 +140,7 @@
     gap: 0.5rem;
     align-items: flex-start;
   }
-  .question-label::before { content: ''; display: none; }
+  .question-label::before { display: none !important; }
 
   textarea, input[type="text"] {
     width: 100%;
@@ -328,14 +328,15 @@
     </div>
   </div>
 
+  <div style="background:var(--teal-light);border-left:4px solid var(--teal);border-radius:0 10px 10px 0;padding:1rem 1.4rem;margin-bottom:1.5rem;font-size:0.88rem;color:var(--dark);line-height:1.7;font-style:italic;">
+    Ne te censure pas et note tout ce qui te vient : des exemples et souvenirs remontent souvent au fil de l'exercice et au-delà !
+  </div>
+
   <div class="section">
-    <div class="section-header">
-      <div class="section-icon">✦</div>
-    </div>
 
     <div class="question-field">
       <div class="question-label" style="padding-left:0;">Comment je me décris naturellement dans ma façon d'être avec les autres, au travail, en famille, entre amis ?</div>
-      <textarea id="q1" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="q1" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
 
     <div class="question-field">
@@ -345,7 +346,7 @@
 
     <div class="question-field">
       <div class="question-label" style="padding-left:0;">Quels compliments ou retours positifs est-ce qu'il m'arrive de recevoir ? Qu'est-ce que cela révèle comme qualités ?</div>
-      <textarea id="q2b" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="q2b" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
   </div>
 
@@ -375,7 +376,7 @@
     <h3>🌱 Prises de conscience</h3>
     <div class="question-field" style="margin-bottom:0;">
       <div class="question-label" style="padding-left:0;">De quoi est-ce que tu prends conscience et qu'est-ce que tout cela dit de toi ? Qu'est-ce que tu ressens davantage comme faisant partie de tes forces ?</div>
-      <textarea id="conscience-1" placeholder="Écris ici librement..." oninput="saveData()"></textarea>
+      <textarea id="conscience-1" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
   </div>
 
@@ -413,28 +414,25 @@
   </div>
 
   <div class="section">
-    <div class="section-header">
-      <div class="section-icon">⟡</div>
-    </div>
 
     <div class="question-field">
       <div class="question-label" style="padding-left:0;">Quelles qualités je sens avoir en moi mais qui ne s'expriment pas encore pleinement ? Celles que je veux développer, incarner davantage ?</div>
-      <textarea id="q3" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="q3" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
 
     <div class="question-field">
       <div class="question-label" style="padding-left:0;">Quelles qualités ont les personnes qui m'inspirent ? Qu'est-ce qu'elles ont que je sens aussi en germe en moi ?</div>
-      <textarea id="q4" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="q4" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
 
     <div class="question-field">
       <div class="question-label" style="padding-left:0;">En incarnant davantage ces qualités, qu'est-ce que ça va créer pour moi, autour de moi, dans mon projet ou métier ?</div>
-      <textarea id="q5" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="q5" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
 
     <div class="question-field" style="margin-bottom:0;">
       <div class="question-label" style="padding-left:0;">Qu'est-ce que je décide, pour commencer à évoluer ?</div>
-      <textarea id="q6" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="q6" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
   </div>
 
@@ -467,42 +465,39 @@
   </div>
 
   <div class="section">
-    <div class="section-header">
-      <div class="section-icon">✦</div>
-    </div>
 
     <div class="question-field">
       <div class="question-label" style="padding-left:0;">Parmi tes qualités, lesquelles aimerais-tu vraiment utiliser tous les jours dans ton futur projet ou métier ?</div>
-      <textarea id="t3q1" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="t3q1" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
 
     <div class="question-field">
       <div class="question-label" style="padding-left:0;">Quels métiers ou rôles connais-tu où tes qualités seraient utiles ?</div>
-      <textarea id="t3q2" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="t3q2" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
 
     <div class="question-field">
       <div class="question-label" style="padding-left:0;">Si une personne avait exactement tes qualités, dans quel travail la verrais-tu heureuse et efficace ?</div>
-      <textarea id="t3q3" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="t3q3" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
 
     <div class="question-field" style="margin-bottom:0;">
       <div class="question-label" style="padding-left:0;">Dans quel domaine ou secteur tes qualités pourraient vraiment faire la différence ?</div>
-      <textarea id="t3q4" placeholder="Écris ici..." oninput="saveData()"></textarea>
+      <textarea id="t3q4" placeholder="• " oninput="bulletPoints(this)" onkeydown="handleEnter(event, this)"></textarea>
     </div>
   </div>
 
   <div class="ai-section" style="background:linear-gradient(135deg,#f0feff,#e6f9fa);border:2px solid #00c2cb;border-radius:16px;padding:1.8rem 2rem;margin:1.5rem 0;">
-    <h3 style="font-size:1rem;font-weight:700;color:#00c2cb;margin-bottom:0.5rem;">✦ Découvrir mes pistes métiers</h3>
+    <h3 style="font-size:1rem;font-weight:700;color:#00c2cb;margin-bottom:0.5rem;">🤖 ✦ Découvrir mes pistes métiers</h3>
     <p style="font-size:0.83rem;color:#6b6b6b;margin-bottom:1.2rem;line-height:1.6;font-weight:300;">Clique sur le bouton ci-dessous. Claude va analyser tes qualités et tes réponses pour te proposer des pistes de métiers et de projets en lien avec qui tu es.</p>
     <button onclick="analyzeMetiers()" style="background:#00c2cb;color:white;border:none;border-radius:12px;padding:0.85rem 1.8rem;font-size:0.88rem;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">✦ Générer mes pistes métiers</button>
     <div id="ai-result-metiers" style="margin-top:1.2rem;display:none;">
-      <div id="ai-text-metiers" style="background:white;border:1.5px solid #d4c4a8;border-radius:10px;padding:1.2rem;font-size:0.85rem;line-height:1.7;color:#2a2a2a;font-family:'Poppins',sans-serif;font-weight:300;white-space:pre-wrap;"></div>
+      <div id="ai-text-metiers" style="background:white;border:1.5px solid #d4c4a8;border-radius:10px;padding:1.2rem;font-size:0.85rem;line-height:1.7;color:#2a2a2a;font-family:'Poppins',sans-serif;font-weight:300;white-space:pre-wrap;max-height:500px;overflow-y:auto;"></div>
     </div>
   </div>
 
   <div style="background:#f5efe6;border:1.5px solid #d4c4a8;border-radius:12px;padding:1.4rem 1.6rem;margin-top:1rem;line-height:1.8;font-size:0.84rem;color:#6b6b6b;">
-    <p>Pour rappel, ce ne sont que des propositions générées par l'IA pour t'aider à ouvrir le champ des possibles. Maintenant, rien ne remplace tes propres recherches basées sur ce que <em>toi</em> tu ressens.</p>
+    <p>Il ne s'agit que de propositions générées par l'IA pour t'aider à ouvrir le champ des possibles. En aucun cas cela signifie que la bonne voie figure ici et qu'il n'y a que ça qui est fait pour toi. Rien ne remplace tes propres recherches basées sur ce que <em>toi</em> tu ressens.</p>
   </div>
 
   <div class="download-bar">
@@ -613,6 +608,20 @@ Sois concret, valorisant, et ose des propositions auxquelles elle n'aurait pas f
     saveData();
   } catch(e) {
     textDiv.innerText = 'Une erreur s\'est produite. Vérifie ta connexion et réessaie.';
+  }
+}
+
+function bulletPoints(el) { saveData(); }
+
+function handleEnter(e, el) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const start = el.selectionStart;
+    const val = el.value;
+    const newVal = val.substring(0, start) + '\n• ' + val.substring(start);
+    el.value = newVal;
+    el.selectionStart = el.selectionEnd = start + 3;
+    saveData();
   }
 }
 
