@@ -457,26 +457,6 @@
     gap: 0.5rem;
   }
 
-  /* DOWNLOAD BAR */
-  .download-bar {
-    background: var(--dark);
-    border-radius: 14px;
-    padding: 1.5rem 2rem;
-    margin-top: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .download-bar p {
-    color: #ccc;
-    font-size: 0.83rem;
-    font-weight: 300;
-    line-height: 1.5;
-  }
-  .download-bar p strong { color: white; }
-
   /* PROGRESS */
   .progress-bar-wrap {
     background: var(--border);
@@ -516,11 +496,10 @@
     .row-2 { grid-template-columns: 1fr; }
     .tabs-bar { overflow-x: auto; }
     .tab-btn { padding: 0.8rem 1rem; font-size: 0.75rem; }
-    .download-bar { flex-direction: column; align-items: flex-start; }
   }
 
   @media print {
-    .header, .tabs-bar, .btn-add, .btn-primary, .btn-gold, .btn-outline, .download-bar, .audio-block { display: none !important; }
+    .header, .tabs-bar, .btn-add, .btn-primary, .btn-gold, .btn-outline, .audio-block { display: none !important; }
     .tab-content { display: block !important; }
     .section, .conscience-block { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
     body { background: white; }
@@ -581,11 +560,6 @@
       <div class="audio-text"><strong>Écoute d'abord ce message avant de commencer</strong></div>
       <audio controls style="width:100%;margin-top:0.3rem;" preload="metadata"><source src="./anime.mp3" type="audio/mpeg"></audio>
     </div>
-  </div>
-
-  <div style="background:#fff5f5;border:1.5px solid #e05555;border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.8rem;color:#c0392b;display:flex;align-items:flex-start;gap:0.6rem;line-height:1.6;">
-    <span style="flex-shrink:0;">⚠️</span>
-    <span>Tes réponses sont sauvegardées dans ce navigateur. Pour éviter tout risque de perdre ton travail, <strong>télécharge en PDF après chaque session de travail.</strong></span>
   </div>
 
   <!-- PARTIE 1 : LES MISSIONS -->
@@ -707,13 +681,6 @@
     </a>
   </div>
 
-  <div class="download-bar">
-    <div>
-      <p><strong>Tu as terminé ce fichier ? Bravo !</strong></p>
-      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger ton document en PDF : clique sur le bouton ci-dessous, puis dans la fenêtre qui s'ouvre, sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination et clique "Enregistrer".</p>
-    </div>
-    <button class="btn-gold" onclick="window.print()">🖨️ Télécharger mon document en PDF</button>
-  </div>
 
 </div>
 </div>

@@ -79,18 +79,6 @@
 
   .container { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-  .save-banner {
-    background: #fff3cd;
-    border: 1.5px solid var(--gold);
-    border-radius: 10px;
-    padding: 0.8rem 1.2rem;
-    margin-bottom: 1.5rem;
-    font-size: 0.8rem;
-    color: #856404;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
 
   .intro-block {
     background: var(--white);
@@ -228,20 +216,6 @@
   }
   .conscience-block h3 { font-size: 0.92rem; font-weight: 700; color: #c8860a; margin-bottom: 0.8rem; }
 
-  /* DOWNLOAD */
-  .download-bar {
-    background: var(--dark);
-    border-radius: 14px;
-    padding: 1.5rem 2rem;
-    margin-top: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .download-bar p { color: #ccc; font-size: 0.83rem; font-weight: 300; line-height: 1.5; }
-  .download-bar p strong { color: white; }
 
   .btn-gold {
     background: var(--gold);
@@ -280,7 +254,7 @@
   .tab-nav-bottom { display: flex; justify-content: flex-end; margin-top: 1.5rem; }
 
   @media print {
-    .header, .tabs-bar, .btn-add-row, .btn-gold, .btn-outline, .download-bar, .audio-block, .save-banner, .tab-nav-bottom { display: none !important; }
+    .header, .tabs-bar, .btn-add-row, .btn-gold, .btn-outline, .audio-block, .tab-nav-bottom { display: none !important; }
     .tab-content { display: block !important; }
     .section, .conscience-block, .transition-block { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
     body { background: white; }
@@ -290,7 +264,6 @@
   @media (max-width: 600px) {
     .tabs-bar { overflow-x: auto; }
     .tab-btn { padding: 0.8rem 1rem; font-size: 0.75rem; }
-    .download-bar { flex-direction: column; align-items: flex-start; }
     .qualities-table th, .qualities-table td { font-size: 0.75rem; padding: 0.3rem; }
   }
 </style>
@@ -348,9 +321,6 @@
 <div id="tab1" class="tab-content active">
 <div class="container">
 
-  <div class="save-banner">
-    💾 Tes réponses sont sauvegardées dans ce navigateur — télécharge en PDF après chaque session pour éviter de les perdre.
-  </div>
 
   <div class="intro-block">
     <h1>Voir mes qualités</h1>
@@ -422,13 +392,6 @@
     <p style="font-size:0.88rem;line-height:1.8;color:var(--dark);font-weight:300;">Pour ne pas juste faire ☑️ check et passer à la suite trop rapidement, je t'invite vraiment à prendre le temps d'intégrer et de célébrer tes belles qualités et la personne que tu es. Amuse-toi ces prochains jours à les voir davantage, à voir qu'elles sont à la source de belles choses !</p>
   </div>
 
-  <div class="download-bar">
-    <div>
-      <p><strong>Tu as fini cet onglet ?</strong></p>
-      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger en PDF : clique sur le bouton, puis sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination.</p>
-    </div>
-    <button class="btn-gold" onclick="window.print()">🖨️ Télécharger mon document en PDF</button>
-  </div>
 
   <div class="tab-nav-bottom">
     <button class="btn-outline" onclick="switchTab('tab2', document.querySelectorAll('.tab-btn')[1])">Onglet suivant →</button>
@@ -441,9 +404,6 @@
 <div id="tab2" class="tab-content">
 <div class="container">
 
-  <div class="save-banner">
-    💾 Tes réponses sont sauvegardées dans ce navigateur — télécharge en PDF après chaque session pour éviter de les perdre.
-  </div>
 
   <div class="intro-block">
     <h1>Révéler mes qualités</h1>
@@ -473,13 +433,6 @@
     </div>
   </div>
 
-  <div class="download-bar">
-    <div>
-      <p><strong>Tu as terminé cette partie ? Bravo ! Je te souhaite de belles concrétisations !</strong></p>
-      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger en PDF : clique sur le bouton, puis sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination.</p>
-    </div>
-    <button class="btn-gold" onclick="window.print()">🖨️ Télécharger mon document en PDF</button>
-  </div>
 
   <div class="tab-nav-bottom">
     <button class="btn-outline" onclick="switchTab('tab3', document.querySelectorAll('.tab-btn')[2])">Onglet suivant →</button>
@@ -492,9 +445,6 @@
 <div id="tab3" class="tab-content">
 <div class="container">
 
-  <div class="save-banner">
-    💾 Tes réponses sont sauvegardées dans ce navigateur — télécharge en PDF après chaque session pour éviter de les perdre.
-  </div>
 
   <div class="intro-block">
     <h1>Mobiliser mes qualités</h1>
@@ -537,13 +487,6 @@
     <p>Il ne s'agit que de propositions générées par l'IA pour t'aider à ouvrir le champ des possibles. En aucun cas cela signifie que la bonne voie figure ici et qu'il n'y a que ça qui est fait pour toi. Rien ne remplace tes propres recherches basées sur ce que <em>toi</em> tu ressens.</p>
   </div>
 
-  <div class="download-bar">
-    <div>
-      <p><strong>Tu as terminé ce fichier ? Bravo !</strong></p>
-      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger en PDF : clique sur le bouton, puis sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination. Ensuite dépose ton document sur la plateforme pour me le transmettre.</p>
-    </div>
-    <button class="btn-gold" onclick="window.print()">🖨️ Télécharger mon document en PDF</button>
-  </div>
 
 </div>
 </div>

@@ -459,26 +459,6 @@
     gap: 0.5rem;
   }
 
-  /* DOWNLOAD BAR */
-  .download-bar {
-    background: var(--dark);
-    border-radius: 14px;
-    padding: 1.5rem 2rem;
-    margin-top: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .download-bar p {
-    color: #ccc;
-    font-size: 0.83rem;
-    font-weight: 300;
-    line-height: 1.5;
-  }
-  .download-bar p strong { color: white; }
-
   /* PROGRESS */
   .progress-bar-wrap {
     background: var(--border);
@@ -518,11 +498,10 @@
     .row-2 { grid-template-columns: 1fr; }
     .tabs-bar { overflow-x: auto; }
     .tab-btn { padding: 0.8rem 1rem; font-size: 0.75rem; }
-    .download-bar { flex-direction: column; align-items: flex-start; }
   }
 
   @media print {
-    .header, .tabs-bar, .btn-add, .btn-primary, .btn-gold, .btn-outline, .download-bar, .audio-block, .claude-links, .ai-section button { display: none !important; }
+    .header, .tabs-bar, .btn-add, .btn-primary, .btn-gold, .btn-outline, .audio-block, .claude-links, .ai-section button { display: none !important; }
     .tab-content { display: block !important; }
     .section, .exp-card, .conscience-block { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
     body { background: white; }
@@ -597,10 +576,6 @@
 <div class="container">
 
   
-  <div style="background:#fff3cd;border:1.5px solid #f0b13d;border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.8rem;color:#856404;display:flex;align-items:center;gap:0.6rem;">
-    <span>💾</span>
-    <span>Tes réponses sont sauvegardées dans ce navigateur — télécharge en PDF après chaque session pour éviter de les perdre.</span>
-  </div>
   <div class="intro-block">
     <h1>Mes expériences</h1>
     <p>Commence par lister tes expériences professionnelles, personnelles et associatives. Pour chacune, décris ce que tu y as fait concrètement en donnant le plus de détails possible, et célèbre tes réussites !</p>
@@ -618,14 +593,6 @@
 
   <button class="btn-add" onclick="addExperience()">+ Ajouter une expérience</button>
 
-  <div class="download-bar">
-    <div>
-      <p><strong>Tu as fini cet onglet ?</strong></p>
-      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger ton document en PDF : clique sur le bouton ci-dessous, puis dans la fenêtre qui s'ouvre, sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination et clique "Enregistrer".</p>
-    </div>
-    <button class="btn-gold" onclick="printDoc()">🖨️ Télécharger mon document en PDF</button>
-  </div>
-
   <div class="tab-nav-bottom">
     <button class="btn-outline" onclick="switchTab('tab2', document.querySelectorAll('.tab-btn')[1])">Onglet suivant →</button>
   </div>
@@ -638,10 +605,6 @@
 <div class="container">
 
   
-  <div style="background:#fff3cd;border:1.5px solid #f0b13d;border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.8rem;color:#856404;display:flex;align-items:center;gap:0.6rem;">
-    <span>💾</span>
-    <span>Tes réponses sont sauvegardées dans ce navigateur — télécharge en PDF après chaque session pour éviter de les perdre.</span>
-  </div>
   <div class="intro-block">
     <h1>Mes talents naturels</h1>
     <p>Cette partie va te permettre de prendre conscience de tes compétences naturelles : ce qui est tellement facile et évident pour toi que tu ne t'en rends pas compte, alors que ce sont de réels talents. Et ce n'est pas que dans ta vie professionnelle — les talents traversent toutes les sphères de ta vie !</p>
@@ -701,14 +664,6 @@
     </div>
   </div>
 
-  <div class="download-bar">
-    <div>
-      <p><strong>Tu as fini cet onglet ?</strong></p>
-      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger ton document en PDF : clique sur le bouton ci-dessous, puis dans la fenêtre qui s'ouvre, sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination et clique "Enregistrer".</p>
-    </div>
-    <button class="btn-gold" onclick="printDoc()">🖨️ Télécharger mon document en PDF</button>
-  </div>
-
   <div class="tab-nav-bottom">
     <button class="btn-outline" onclick="switchTab('tab3', document.querySelectorAll('.tab-btn')[2])">Onglet suivant →</button>
   </div>
@@ -721,10 +676,6 @@
 <div id="tab3" class="tab-content">
 <div class="container">
 
-  <div style="background:#fff3cd;border:1.5px solid #f0b13d;border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.8rem;color:#856404;display:flex;align-items:center;gap:0.6rem;">
-    <span>💾</span>
-    <span>Tes réponses sont sauvegardées dans ce navigateur — télécharge en PDF après chaque session pour éviter de les perdre.</span>
-  </div>
 
   <div class="intro-block">
     <h1>Analyser mes compétences</h1>
@@ -748,14 +699,6 @@
     </div>
   </div>
 
-  <div class="download-bar">
-    <div>
-      <p><strong>Tu as fini cet onglet ?</strong></p>
-      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger ton document en PDF : clique sur le bouton ci-dessous, puis dans la fenêtre qui s'ouvre, sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination et clique "Enregistrer".</p>
-    </div>
-    <button class="btn-gold" onclick="printDoc()">🖨️ Télécharger mon document en PDF</button>
-  </div>
-
   <div class="tab-nav-bottom">
     <button class="btn-outline" onclick="switchTab('tab4', document.querySelectorAll('.tab-btn')[3])">Onglet suivant →</button>
   </div>
@@ -767,10 +710,6 @@
 <div id="tab4" class="tab-content">
 <div class="container">
 
-  <div style="background:#fff3cd;border:1.5px solid #f0b13d;border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.8rem;color:#856404;display:flex;align-items:center;gap:0.6rem;">
-    <span>💾</span>
-    <span>Tes réponses sont sauvegardées dans ce navigateur — télécharge en PDF après chaque session pour éviter de les perdre.</span>
-  </div>
   <div class="intro-block">
     <h1>Mes pistes métiers</h1>
     <p>À partir de tout ce que tu as décrit dans les deux onglets précédents, découvre les métiers et projets qui pourraient te correspondre.</p>
@@ -802,13 +741,6 @@
     </div>
   </div>
 
-  <div class="download-bar">
-    <div>
-      <p><strong>Tu as terminé ce fichier ? Bravo !</strong></p>
-      <p style="font-size:0.8rem;margin-top:0.3rem;color:#ccc;">Pour télécharger ton document en PDF : clique sur le bouton ci-dessous, puis dans la fenêtre qui s'ouvre, sélectionne <strong style="color:white;">"Enregistrer en PDF"</strong> comme destination et clique "Enregistrer".</p>
-    </div>
-    <button class="btn-gold" onclick="printDoc()">🖨️ Télécharger mon document en PDF</button>
-  </div>
 
 </div>
 </div>
