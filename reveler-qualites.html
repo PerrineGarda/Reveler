@@ -728,7 +728,7 @@ async function loadDataFromSupabase(clientId) {
   if (!sb) return null;
   try {
     const { data, error } = await sb.from('reveler_responses')
-      .select('data').eq('client_id', clientId).eq('module', MODULE).single();
+      .select('data').eq('client_id', clientId).eq('module', MODULE).maybeSingle();
     if (error || !data) return null;
     return data.data;
   } catch(e) { return null; }

@@ -1365,7 +1365,7 @@ async function loadDataFromSupabase(clientId) {
       .select('data')
       .eq('client_id', clientId)
       .eq('module', MODULE)
-      .single();
+      .maybeSingle();
     if (error || !data) return null;
     return data.data;
   } catch(e) { return null; }
