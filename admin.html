@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Révéler — Espace Perrine</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+<style>
+  :root {
+    --teal: #00c2cb;
+    --gold: #f0b13d;
+    --bg: #e5d7c3;
+    --white: #ffffff;
+    --dark: #2a2a2a;
+    --mid: #6b6b6b;
+    --light: #f5efe6;
+    --border: #d4c4a8;
+    --teal-light: #e6f9fa;
+    --gold-light: #fef6e7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: white;
+    border-bottom: 3px solid var(--gold);
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(240,177,61,0.1);
+  }
+  .header-left { display: flex; align-items: center; gap: 1rem; }
+  .header-badge {
+    background: var(--gold);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .header-title { font-size: 1rem; font-weight: 700; color: var(--dark); }
+  .header-sub { font-size: 0.75rem; color: var(--mid); font-weight: 300; }
+
+  /* CONTAINER */
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* CLIENT SELECTOR */
+  .selector-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.8rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 16px rgba(240,177,61,0.1);
+    border-left: 5px solid var(--gold);
+  }
+  .selector-card h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .selector-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  select {
+    flex: 1;
+    min-width: 200px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.88rem;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--dark);
+    background: white;
+    outline: none;
+    cursor: pointer;
+  }
+  select:focus { border-color: var(--gold); }
+
+  .btn-gold {
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-gold:hover { background: #e0a030; transform: translateY(-1px); }
+
+  /* CLIENT NAME DISPLAY */
+  .client-name-bar {
+    display: none;
+    background: linear-gradient(135deg, var(--gold-light), #fff9ef);
+    border: 1.5px solid var(--gold);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .client-name-bar .client-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .client-name-bar .client-label span { color: var(--gold); }
+  .client-name-bar .last-update {
+    font-size: 0.75rem;
+    color: var(--mid);
+    font-weight: 300;
+  }
+
+  /* MODULES GRID */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .module-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 16px rgba(0,194,203,0.08);
+    border-top: 4px solid var(--teal);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .module-card.gold-top { border-top-color: var(--gold); }
+
+  .module-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .module-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .module-icon.gold { background: var(--gold); }
+  .module-icon.purple { background: #7c3aed; }
+
+  .module-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .module-date {
+    font-size: 0.72rem;
+    color: var(--mid);
+    font-weight: 300;
+  }
+
+  .module-status {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    width: fit-content;
+  }
+  .module-status.filled { background: #e6f9ea; color: #2d7a3a; }
+  .module-status.empty { background: #f5f5f5; color: var(--mid); }
+
+  .module-preview {
+    font-size: 0.78rem;
+    color: var(--mid);
+    font-weight: 300;
+    line-height: 1.6;
+    background: var(--light);
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    min-height: 60px;
+    display: none;
+  }
+
+  .btn-open {
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.65rem 1.2rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s;
+    margin-top: auto;
+  }
+  .btn-open:hover { background: #00adb5; transform: translateY(-1px); }
+  .btn-open.gold-btn { background: var(--gold); }
+  .btn-open.gold-btn:hover { background: #e0a030; }
+  .btn-open.purple-btn { background: #7c3aed; }
+  .btn-open.purple-btn:hover { background: #6d28d9; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--mid);
+    font-size: 0.88rem;
+    font-weight: 300;
+    display: none;
+  }
+  .empty-state .big { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+  /* LOADING */
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--teal);
+    font-size: 0.88rem;
+    display: none;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: none;
+    background: white;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--teal); }
+  .stat-label { font-size: 0.72rem; color: var(--mid); font-weight: 300; }
+
+  @media (max-width: 600px) {
+    .selector-row { flex-direction: column; }
+    select { min-width: 100%; }
+    .btn-gold { width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <div>
+      <div class="header-title">Révéler</div>
+      <div class="header-sub">Espace de suivi</div>
+    </div>
+    <span class="header-badge">Perrine</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- SELECTOR -->
+  <div class="selector-card">
+    <h2>👤 Sélectionner un client</h2>
+    <div class="selector-row">
+      <select id="client-select">
+        <option value="">Chargement des clients...</option>
+      </select>
+      <button class="btn-gold" onclick="loadClient()">Voir ses réponses</button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading" id="loading">⏳ Chargement en cours...</div>
+
+  <!-- CLIENT NAME BAR -->
+  <div class="client-name-bar" id="client-name-bar">
+    <div class="client-label">📋 <span id="client-display-name"></span></div>
+    <div class="last-update" id="last-update"></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num" id="stat-modules">0/3</div>
+      <div class="stat-label">modules remplis</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-fields">0</div>
+      <div class="stat-label">champs complétés</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-last">—</div>
+      <div class="stat-label">dernière activité</div>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="empty-state">
+    <div class="big">👥</div>
+    Sélectionne un client pour voir ses réponses
+  </div>
+
+  <!-- MODULES GRID -->
+  <div class="modules-grid" id="modules-grid" style="display:none;">
+
+    <div class="module-card" id="card-competences">
+      <div class="module-header">
+        <div class="module-icon">📋</div>
+        <div>
+          <div class="module-title">Mes compétences</div>
+          <div class="module-date" id="date-competences">—</div>
+        </div>
+      </div>
+      <div class="module-status empty" id="status-competences">○ Pas encore rempli</div>
+      <div class="module-preview" id="preview-competences"></div>
+      <a id="link-competences" href="#" target="_blank" class="btn-open">
+        Ouvrir ce module →
+      </a>
+    </div>
+
+    <div class="module-card gold-top" id="card-qualites">
+      <div class="module-header">
+        <div class="module-icon gold">✨</div>
+        <div>
+          <div class="module-title">Mes qualités</div>
+          <div class="module-date" id="date-qualites">—</div>
+        </div>
+      </div>
+      <div class="module-status empty" id="status-qualites">○ Pas encore rempli</div>
+      <div class="module-preview" id="preview-qualites"></div>
+      <a id="link-qualites" href="#" target="_blank" class="btn-open gold-btn">
+        Ouvrir ce module →
+      </a>
+    </div>
+
+    <div class="module-card" id="card-anime">
+      <div class="module-header">
+        <div class="module-icon purple">🎯</div>
+        <div>
+          <div class="module-title">Ce qui m'anime</div>
+          <div class="module-date" id="date-anime">—</div>
+        </div>
+      </div>
+      <div class="module-status empty" id="status-anime">○ Pas encore rempli</div>
+      <div class="module-preview" id="preview-anime"></div>
+      <a id="link-anime" href="#" target="_blank" class="btn-open purple-btn">
+        Ouvrir ce module →
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL = 'https://steekhqvacfjxakncbwt.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0ZWVraHF2YWNmanhha25jYnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0ODA4NTgsImV4cCI6MjEwNzA1Njg1OH0.uc2jhsL9BmEHt8ugVmTmq_t2giZ4jXBuO-I6w--tdaE';
+const BASE_URL = 'https://reveler-mocha.vercel.app';
+
+let sb;
+
+async function init() {
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // Load all unique clients across all modules
+  const { data, error } = await sb.from('reveler_responses')
+    .select('client_id, module, updated_at')
+    .order('updated_at', { ascending: false });
+
+  if (error || !data || data.length === 0) {
+    document.getElementById('client-select').innerHTML = '<option value="">Aucun client pour l\'instant</option>';
+    document.getElementById('empty-state').style.display = 'block';
+    return;
+  }
+
+  // Get unique clients with their most recent activity
+  const clientMap = {};
+  data.forEach(row => {
+    if (!clientMap[row.client_id] || new Date(row.updated_at) > new Date(clientMap[row.client_id])) {
+      clientMap[row.client_id] = row.updated_at;
+    }
+  });
+
+  const sel = document.getElementById('client-select');
+  sel.innerHTML = '<option value="">— Choisir un client —</option>' +
+    Object.entries(clientMap)
+      .sort((a, b) => new Date(b[1]) - new Date(a[1]))
+      .map(([clientId, date]) => {
+        const label = formatClientName(clientId);
+        const dateStr = new Date(date).toLocaleDateString('fr-FR');
+        return `<option value="${clientId}">${label} — ${dateStr}</option>`;
+      }).join('');
+
+  document.getElementById('empty-state').style.display = 'block';
+}
+
+function formatClientName(clientId) {
+  return clientId.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+async function loadClient() {
+  const clientId = document.getElementById('client-select').value;
+  if (!clientId) return;
+
+  // Hide everything, show loading
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('modules-grid').style.display = 'none';
+  document.getElementById('client-name-bar').style.display = 'none';
+  document.getElementById('stats-bar').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+
+  // Load all modules for this client
+  const { data, error } = await sb.from('reveler_responses')
+    .select('module, data, updated_at')
+    .eq('client_id', clientId);
+
+  document.getElementById('loading').style.display = 'none';
+
+  const clientName = formatClientName(clientId);
+  document.getElementById('client-display-name').textContent = clientName;
+
+  // Find most recent activity
+  let lastDate = null;
+  const moduleData = {};
+  if (data) {
+    data.forEach(row => {
+      moduleData[row.module] = row;
+      if (!lastDate || new Date(row.updated_at) > new Date(lastDate)) lastDate = row.updated_at;
+    });
+  }
+
+  if (lastDate) {
+    document.getElementById('last-update').textContent = 'Dernière activité : ' + new Date(lastDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  // Update each module card
+  let filledCount = 0;
+  let totalFields = 0;
+
+  const modules = [
+    { key: 'competences', file: 'reveler-competences.html' },
+    { key: 'qualites', file: 'reveler-qualites.html' },
+    { key: 'anime', file: 'reveler-anime.html' },
+  ];
+
+  modules.forEach(({ key, file }) => {
+    const row = moduleData[key];
+    const statusEl = document.getElementById('status-' + key);
+    const dateEl = document.getElementById('date-' + key);
+    const previewEl = document.getElementById('preview-' + key);
+    const linkEl = document.getElementById('link-' + key);
+
+    // Set link
+    linkEl.href = `${BASE_URL}/${file}?admin=perrine&client=${clientId}`;
+
+    if (row && row.data) {
+      filledCount++;
+      const fieldCount = Object.values(row.data).filter(v => v && v.toString().trim() && !v.toString().startsWith('_')).length;
+      totalFields += fieldCount;
+
+      statusEl.className = 'module-status filled';
+      statusEl.textContent = '✓ ' + fieldCount + ' champ' + (fieldCount > 1 ? 's' : '') + ' rempli' + (fieldCount > 1 ? 's' : '');
+
+      dateEl.textContent = 'Modifié le ' + new Date(row.updated_at).toLocaleDateString('fr-FR');
+
+      // Show a preview of first non-empty text value
+      const firstVal = Object.entries(row.data).find(([k, v]) => v && v.toString().trim() && !k.startsWith('_'));
+      if (firstVal) {
+        previewEl.style.display = 'block';
+        const preview = firstVal[1].toString().substring(0, 120);
+        previewEl.textContent = preview + (firstVal[1].toString().length > 120 ? '...' : '');
+      }
+    } else {
+      statusEl.className = 'module-status empty';
+      statusEl.textContent = '○ Pas encore rempli';
+      dateEl.textContent = '—';
+      previewEl.style.display = 'none';
+    }
+  });
+
+  // Stats
+  document.getElementById('stat-modules').textContent = filledCount + '/3';
+  document.getElementById('stat-fields').textContent = totalFields;
+  document.getElementById('stat-last').textContent = lastDate ? new Date(lastDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '—';
+
+  // Show everything
+  document.getElementById('client-name-bar').style.display = 'flex';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('modules-grid').style.display = 'grid';
+}
+
+init();
+</script>
+</body>
+</html>
