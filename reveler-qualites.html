@@ -288,7 +288,7 @@
   </div>
 </div>
 <!-- ADMIN SCREEN -->
-<div id="admin-screen" style="display:none;position:fixed;inset:0;background:#e5d7c3;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+<div id="admin-screen" style="display:none;position:fixed;inset:0;background:#e5d7c3;z-index:9999;align-items:center;justify-content:center;padding:1.5rem;">
   <div style="background:white;border-radius:20px;padding:2.5rem 2rem;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(240,177,61,0.2);text-align:center;">
     <h2 style="font-size:1.2rem;font-weight:700;color:#f0b13d;margin-bottom:0.4rem;">🔐 Accès Perrine</h2>
     <p style="font-size:0.82rem;color:#6b6b6b;font-weight:300;margin-bottom:1.5rem;">Consulter les réponses d'un client</p>
@@ -731,15 +731,42 @@ async function loadAdminClient() {
   const banner = document.getElementById('admin-banner');
   banner.style.display = 'block';
   banner.textContent = 'Chargement...';
-  const remoteData = await loadDataFromSupabase(clientId);
-  if (!remoteData) { banner.textContent = 'Aucune donnée trouvée.'; return; }
+
+  // Fetch full row to handle both 'data' column and flat columns
+  let remoteData = null;
+  try {
+    if (!sb) throw new Error('no sb');
+    const { data: row, error } = await sb.from('reveler_responses')
+      .select('*').eq('client_id', clientId).eq('module', MODULE).maybeSingle();
+    if (!error && row) {
+      // Prefer the 'data' JSON column if present and non-empty
+      if (row.data && typeof row.data === 'object' && Object.keys(row.data).length > 0) {
+        remoteData = row.data;
+      } else {
+        // Fallback: use the row itself (flat columns), excluding meta fields
+        const meta = ['id','client_id','module','updated_at','created_at'];
+        remoteData = {};
+        Object.entries(row).forEach(([k,v]) => { if (!meta.includes(k) && v !== null) remoteData[k] = v; });
+        if (Object.keys(remoteData).length === 0) remoteData = null;
+      }
+    }
+  } catch(e) {}
+
+  if (!remoteData) { banner.textContent = 'Aucune donnée trouvée pour ce client.'; return; }
+
   currentClientId = clientId;
+  // Reset the table before applying so we don't get doubled rows
+  document.getElementById('qualities-body').innerHTML = '';
+  rowCount = 0;
+
   document.getElementById('admin-screen').style.display = 'none';
   document.getElementById('main-app').style.display = 'block';
   const label = clientId.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   const ht = document.querySelector('.header-title');
   if (ht) ht.innerHTML = 'Révéler mes qualités — <span style="color:#f0b13d">' + label + '</span> <span style="font-size:0.7rem;background:#f0b13d;color:white;padding:0.1rem 0.4rem;border-radius:4px;">ADMIN</span>';
   applyData(remoteData);
+  // Make all fields read-only in admin view
+  document.querySelectorAll('#main-app textarea, #main-app input').forEach(el => { el.readOnly = true; el.style.background='#fafaf7'; });
 }
 
 window.addEventListener('load', async () => {
