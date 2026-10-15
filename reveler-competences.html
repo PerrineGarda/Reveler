@@ -1264,9 +1264,9 @@ let currentClientId = null;
 let saveTimer = null;
 
 function initSupabase() {
-  try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { sb = null; }
+  if (!sb) try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { sb = null; }
 }
-try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { sb = null; }
+initSupabase();
 
 async function saveData() {
   const data = {};
