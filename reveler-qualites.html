@@ -612,6 +612,10 @@ function switchTab(id, btn) {
   if (target) target.classList.add('active');
   if (btn) btn.classList.add('active');
   window.scrollTo(0, 0);
+  // Recalculer la hauteur des textareas maintenant qu'ils sont visibles
+  setTimeout(() => {
+    if (target) target.querySelectorAll('textarea').forEach(el => autoResize(el));
+  }, 50);
 }
 
 let rowCount = 0;
