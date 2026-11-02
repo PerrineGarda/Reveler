@@ -566,26 +566,17 @@ function lsGet(id){try{return localStorage.getItem('ik_'+id)||'';}catch(e){retur
 function scheduleSave(){setSave('saving');clearTimeout(saveTimer);saveTimer=setTimeout(doSave,1500);}
 async function doSave(){
   if(!db||!currentClientId){setSave('');return;}
-  const row={client_id:currentClientId,module:MODULE,updated_at:new Date().toISOString(),current_step:currentStep};
+  const dataObj={current_step:currentStep};
   ALL_FIELDS.forEach(id=>{
     const el=document.getElementById(id);
     const val=el?el.value:(fieldCache[id]||'');
-    if(val!==''&&val!=null)row[id.replace(/-/g,'_')]=val;
+    if(val!==''&&val!=null)dataObj[id.replace(/-/g,'_')]=val;
   });
+  const row={client_id:currentClientId,module:MODULE,updated_at:new Date().toISOString(),data:dataObj};
   try{
-    const{data:upsertData,error}=await db.from('reveler_responses').upsert(row,{onConflict:'client_id,module'}).select();
-    if(error){
-      console.error('[SAVE ERROR]',error.code,error.message,error.details,error.hint);
-      setSave('');
-    } else {
-      // Vérifier que les colonnes c2_x ont bien été sauvegardées
-      if(upsertData&&upsertData[0]){
-        const saved=upsertData[0];
-        const c2missing=['c2_1','c2_2','c2_3','c2_4','c2_5'].filter(k=>!(k in saved));
-        if(c2missing.length) console.warn('[COLONNES MANQUANTES]',c2missing,'— Ces colonnes n\'existent pas dans Supabase. Exécute le SQL ALTER TABLE pour les créer.');
-      }
-      setSave('saved');
-    }
+    const{error}=await db.from('reveler_responses').upsert(row,{onConflict:'client_id,module'});
+    if(error){console.error('[SAVE ERROR]',error.message);setSave('');}
+    else{setSave('saved');}
   }catch(e){console.error('[SAVE EXCEPTION]',e);setSave('');}
 }
 function applyDataAndShow(sourceCache){
@@ -618,17 +609,18 @@ async function loadData(){
   try{
     const{data}=await db.from('reveler_responses').select('*').eq('client_id',currentClientId).eq('module',MODULE).maybeSingle();
     if(!data)return;
+    const d=data.data||data; // support ancien format colonnes et nouveau format {data:{...}}
     ALL_FIELDS.forEach(id=>{
       const key=id.replace(/-/g,'_');
-      if(data[key]!=null){
-        fieldCache[id]=data[key];
-        lsSet(id,data[key]);
+      if(d[key]!=null){
+        fieldCache[id]=d[key];
+        lsSet(id,d[key]);
         const el=document.getElementById(id);
-        if(el)el.value=data[key];
+        if(el)el.value=d[key];
       }
     });
     // Ré-appliquer après chargement Supabase
-    applyDataAndShow(data);
+    applyDataAndShow(d);
   }catch(e){}
 }
 let adminAllData=[];
