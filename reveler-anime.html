@@ -731,24 +731,54 @@ function initSupabase() {
 }
 initSupabase();
 
-async function saveData() {
+function collectData() {
   const data = {};
   document.querySelectorAll('input[type="text"], textarea').forEach(el => {
     if (el.id) data[el.id] = el.value;
   });
+  return data;
+}
+
+async function pushToSupabase(data) {
+  if (!sb || !currentClientId) return;
+  try {
+    await sb.from('reveler_responses').upsert({
+      client_id: currentClientId, module: MODULE, data: data,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'client_id,module' });
+  } catch(e) {}
+}
+
+async function saveData() {
+  const data = collectData();
   try { localStorage.setItem('reveler_anime', JSON.stringify(data)); } catch(e) {}
   if (sb && currentClientId) {
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(async () => {
-      try {
-        await sb.from('reveler_responses').upsert({
-          client_id: currentClientId, module: MODULE, data: data,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'client_id,module' });
-      } catch(e) {}
-    }, 1500);
+    saveTimer = setTimeout(() => pushToSupabase(data), 800);
   }
 }
+
+// Sauvegarde forcée avant impression (Ctrl+P / Enregistrer en PDF)
+window.addEventListener('beforeprint', () => {
+  if (!currentClientId) return;
+  clearTimeout(saveTimer);
+  pushToSupabase(collectData());
+});
+
+// Sauvegarde forcée quand le client quitte la page
+window.addEventListener('beforeunload', () => {
+  if (!currentClientId) return;
+  const data = collectData();
+  try { localStorage.setItem('reveler_anime', JSON.stringify(data)); } catch(e) {}
+  const payload = JSON.stringify([{ client_id: currentClientId, module: MODULE, data: data, updated_at: new Date().toISOString() }]);
+  try {
+    fetch(`${SUPABASE_URL}/rest/v1/reveler_responses?on_conflict=client_id,module`, {
+      method: 'POST', keepalive: true,
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+      body: payload
+    });
+  } catch(e) {}
+});
 
 async function loadDataFromSupabase(clientId) {
   if (!sb) return null;
@@ -784,15 +814,22 @@ function loginUser() {
   initAndLoad();
 }
 
+function hasContent(data) {
+  return Object.entries(data).some(([k, v]) => !k.startsWith('_') && k !== 'login-nom' && k !== 'login-prenom' && typeof v === 'string' && v.trim() !== '');
+}
+
 async function initAndLoad() {
   initSupabase();
   if (currentClientId) {
     const remoteData = await loadDataFromSupabase(currentClientId);
-    if (remoteData) { applyData(remoteData); return; }
+    if (remoteData && hasContent(remoteData)) { applyData(remoteData); return; }
   }
   try {
     const raw = localStorage.getItem('reveler_anime');
-    if (raw) applyData(JSON.parse(raw));
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (hasContent(parsed)) applyData(parsed);
+    }
   } catch(e) {}
 }
 

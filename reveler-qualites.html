@@ -646,31 +646,63 @@ const MODULE = 'qualites';
 let sb = null;
 let currentClientId = null;
 let saveTimer = null;
+let isLoading = false; // bloque les sauvegardes pendant le chargement initial
 
 function initSupabase() {
   if (!sb) try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { sb = null; }
 }
 initSupabase();
 
-async function saveData() {
+function collectData() {
   const data = {};
   document.querySelectorAll('textarea, input[type="text"]').forEach(el => {
     if (el.id) data[el.id] = el.value;
   });
   data['_rowCount'] = rowCount;
+  return data;
+}
+
+async function pushToSupabase(data) {
+  if (!sb || !currentClientId) return;
+  try {
+    await sb.from('reveler_responses').upsert({
+      client_id: currentClientId, module: MODULE, data: data,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'client_id,module' });
+  } catch(e) {}
+}
+
+async function saveData() {
+  if (isLoading) return; // ne pas sauvegarder pendant le chargement
+  const data = collectData();
   try { localStorage.setItem('reveler_qualites', JSON.stringify(data)); } catch(e) {}
   if (sb && currentClientId) {
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(async () => {
-      try {
-        await sb.from('reveler_responses').upsert({
-          client_id: currentClientId, module: MODULE, data: data,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'client_id,module' });
-      } catch(e) {}
-    }, 1500);
+    saveTimer = setTimeout(() => pushToSupabase(data), 800);
   }
 }
+
+// Sauvegarde forcée avant impression (Ctrl+P / Enregistrer en PDF)
+window.addEventListener('beforeprint', () => {
+  if (!currentClientId) return;
+  clearTimeout(saveTimer);
+  pushToSupabase(collectData());
+});
+
+// Sauvegarde forcée quand le client quitte la page
+window.addEventListener('beforeunload', () => {
+  if (!currentClientId) return;
+  const data = collectData();
+  try { localStorage.setItem('reveler_qualites', JSON.stringify(data)); } catch(e) {}
+  const payload = JSON.stringify([{ client_id: currentClientId, module: MODULE, data: data, updated_at: new Date().toISOString() }]);
+  try {
+    fetch(`${SUPABASE_URL}/rest/v1/reveler_responses?on_conflict=client_id,module`, {
+      method: 'POST', keepalive: true,
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+      body: payload
+    });
+  } catch(e) {}
+});
 
 async function loadDataFromSupabase(clientId) {
   if (!sb) return null;
@@ -692,7 +724,7 @@ async function listClients() {
   } catch(e) { return []; }
 }
 
-function loginUser() {
+async function loginUser() {
   const prenom = document.getElementById('login-prenom').value.trim();
   const nom = document.getElementById('login-nom').value.trim();
   if (!prenom || !nom) { document.getElementById('login-error').style.display = 'block'; return; }
@@ -703,22 +735,33 @@ function loginUser() {
   document.getElementById('main-app').style.display = 'block';
   const ht = document.querySelector('.header-title');
   if (ht) ht.textContent = 'Révéler mes qualités — ' + prenom + ' ' + nom;
-  initAndLoad();
+  isLoading = true;
+  await initAndLoad();
+  isLoading = false;
+}
+
+function hasContent(data) {
+  // Vérifie qu'il y a au moins une réponse non-vide (hors champs système)
+  return Object.entries(data).some(([k, v]) => k !== '_rowCount' && k !== 'login-nom' && k !== 'login-prenom' && typeof v === 'string' && v.trim() !== '');
 }
 
 async function initAndLoad() {
   initSupabase();
   if (currentClientId) {
     const remoteData = await loadDataFromSupabase(currentClientId);
-    if (remoteData) { applyData(remoteData); return; }
+    if (remoteData && hasContent(remoteData)) { applyData(remoteData); return; }
   }
   try {
     const raw = localStorage.getItem('reveler_qualites');
-    if (raw) applyData(JSON.parse(raw));
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (hasContent(parsed)) applyData(parsed);
+    }
   } catch(e) {}
 }
 
 function applyData(data) {
+  isLoading = true;
   const savedRowCount = data['_rowCount'] || 0;
   const existing = document.querySelectorAll('#qualities-body tr').length;
   for (let i = existing; i < savedRowCount; i++) addRow();
@@ -727,6 +770,7 @@ function applyData(data) {
     const el = document.getElementById(id);
     if (el && val !== undefined && val !== null) { el.value = val; autoResize(el); }
   });
+  isLoading = false;
 }
 
 async function loadAdminClient() {
@@ -800,9 +844,11 @@ window.addEventListener('load', async () => {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main-app').style.display = 'block';
     if (savedLabel) { const ht = document.querySelector('.header-title'); if (ht) ht.textContent = 'Révéler mes qualités — ' + savedLabel; }
+    isLoading = true;
     if (document.querySelectorAll('#qualities-body tr').length === 0) for (let i = 0; i < 5; i++) addRow();
     document.querySelectorAll('textarea').forEach(autoResize);
     await initAndLoad();
+    isLoading = false;
   } else {
     document.getElementById('main-app').style.display = 'none';
     document.getElementById('login-screen').style.display = 'flex';
